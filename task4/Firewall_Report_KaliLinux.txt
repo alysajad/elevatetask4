@@ -1,0 +1,147 @@
+
+# Firewall Configuration and Analysis Report on Kali Linux (UFW)
+
+## Student Name: Sajad Hussain 
+## Date: 01/06/2025
+## System: Kali Linux
+
+---
+
+## Objective
+
+To explore and configure firewall rules using UFW (Uncomplicated Firewall) on Kali Linux by:
+- Installing and enabling UFW.
+- Listing and modifying firewall rules.
+- Blocking/allowing specific ports.
+- Testing and verifying firewall behavior.
+- Reverting test configurations.
+- Understanding how firewall rules manage traffic.
+
+---
+
+## Step-by-Step Process and Analysis
+
+### 1. Opening the Firewall Configuration Tool
+
+- Initially attempted to check UFW status:
+  ```bash
+  sudo ufw status numbered
+  ```
+- Output: `command not found`, indicating UFW was not installed.
+
+### 2. Installing UFW
+
+- Installed UFW using APT:
+  ```bash
+  sudo apt install ufw
+  ```
+- This added the UFW package and created necessary configuration files.
+
+### 3. Checking Current Firewall Rules
+
+- Verified initial status using:
+  ```bash
+  sudo ufw status numbered
+  ```
+- Output: `Status: inactive` — confirms firewall was not active.
+
+### 4. Enabling UFW
+
+- Activated the firewall with:
+  ```bash
+  sudo ufw enable
+  ```
+- Output confirmed UFW is now active and will start on system boot.
+
+### 5. Adding Rule to Block Port 23 (Telnet)
+
+- Telnet is an insecure protocol, often used in legacy systems. Blocking it prevents unencrypted logins.
+- Rule added with:
+  ```bash
+  sudo ufw deny 23
+  ```
+- Verified with:
+  ```bash
+  sudo ufw status numbered
+  ```
+- Output showed rule entries for port 23 (IPv4 and IPv6).
+
+### 6. Testing Firewall Rule
+
+- Installed telnet client:
+  ```bash
+  sudo apt install telnet
+  ```
+- Attempted to connect:
+  ```bash
+  telnet localhost 23
+  ```
+- Output: `Connection refused` — indicates the firewall is correctly blocking inbound Telnet requests.
+
+### 7. Adding Rule to Allow SSH (Port 22)
+
+- SSH is commonly used for remote access. Allowing port 22 ensures administrative access is preserved.
+- Command used:
+  ```bash
+  sudo ufw allow 22
+  ```
+
+### 8. Removing the Telnet Block Rule
+
+- Deleted the rule blocking port 23 (IPv4) using:
+  ```bash
+  sudo ufw delete 1
+  ```
+- Confirmed rule was deleted after prompt.
+
+### 9. Listing Final Rules
+
+- After deletion and addition, confirmed current rules using:
+  ```bash
+  sudo ufw status numbered
+  ```
+- SSH allow rule remains; Telnet block rule successfully removed.
+
+---
+
+## Analysis: How Firewall Filters Traffic
+
+- **Firewall Basics**: Firewalls inspect incoming and outgoing traffic based on rules. They operate at network and transport layers to block or allow data packets.
+- **UFW Utility**: UFW simplifies `iptables`, providing user-friendly commands to secure the system.
+- **Blocking Telnet**: Protects against potential exploitation from insecure and outdated protocols.
+- **Allowing SSH**: Maintains remote management capabilities while ensuring security through encryption.
+- **Rule Precedence**: UFW processes rules in order; specific DENY or ALLOW rules are evaluated top-down.
+
+---
+
+## Security Implications
+
+- Blocking unused or insecure ports (like Telnet) hardens the system against brute force and eavesdropping attacks.
+- Allowing only essential services (SSH) minimizes the attack surface.
+- Ensuring the firewall is active and persistent through reboots enhances long-term protection.
+
+---
+
+## Commands Summary
+
+```bash
+sudo apt install ufw
+sudo ufw enable
+sudo ufw status numbered
+sudo ufw deny 23
+sudo apt install telnet
+telnet localhost 23
+sudo ufw allow 22
+sudo ufw delete 1
+sudo ufw status numbered
+```
+
+---
+
+## Conclusion
+
+The task demonstrated the ability to manage basic firewall configurations using UFW in Kali Linux. Blocking, allowing, and removing rules worked as expected. UFW offers a manageable interface to enforce basic network security best practices and protects systems from unauthorized access.
+
+---
+
+### End of Report
